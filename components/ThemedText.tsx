@@ -16,6 +16,7 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const backgroundColor = useThemeColor({ light: '#fff', dark: '#222' }, 'background');
 
   return (
     <Text
@@ -39,18 +40,20 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   defaultSemiBold: {
+    marginTop: '5%',
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '600',
   },
   title: {
-    fontSize: 32,
+    fontSize: 25,
     fontWeight: 'bold',
     lineHeight: 32,
   },
   subtitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center'
   },
   link: {
     lineHeight: 30,

@@ -1,75 +1,136 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { ThemeInput } from '@/components/ThemeInput';
+import UseLogin from '@/hooks/UseLogin';
+import { useState } from 'react';
+import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function LoginScreen() {
+  const [Usuario, setUsuario] = useState('')
+  const [Contraseña, setContraseña] = useState('')
 
-export default function HomeScreen() {
+  const { loading, handleLogin, error } = UseLogin({
+    Usuario,
+    Contraseña
+  });
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+
+      <View style={styles.conten}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20}}>Arqueo multiempres</Text>
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('../../assets/images/logogane.webp')}
+          style={{
+            width: 300,
+            height: 100,
+            resizeMode: 'contain',
+            marginTop: 20
+          }} />
+
+        <Text style={styles.Text} >Usuario</Text>
+        <ThemeInput
+          style={styles.input}
+          onChangeText={text => setUsuario(text)}
+          value={Usuario}
+          placeholder="ingresar usuario"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Text style={styles.Text} >Contraseña</Text>
+        <ThemeInput
+          style={styles.input}
+          onChangeText={text => setContraseña(text)}
+          value={Contraseña}
+          placeholder="ingresar contraseña"
+          secureTextEntry={true}
+        />
+
+        <Pressable style={styles.Button} onPress={handleLogin}>
+          <Text>
+            Iniciar sesion
+          </Text>
+        </Pressable>
+      </View>
+
+      {error && <Text style={styles.error}>{error}</Text>}
+      {loading && <Text style={styles.success}> {loading ? 'Cargando...' : 'Iniciar sesión'}</Text>}
+
+    </View >
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '147%',
+    borderRadius: 10,
+    backgroundColor: 'white',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  conten: {
+    width: '90%',
+    minHeight: 380,
+    backgroundColor: '#c7e0fa', // azul más notorio
+    borderWidth: 2,
+    borderColor: '#2563eb', // azul fuerte para el borde
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    alignSelf: 'center',
+    paddingVertical: 24,
+    paddingHorizontal: 10,
+    elevation: 4, // sombra en Android
+    shadowColor: '#000', // sombra en iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 10,
+    width: '60%',
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    color: 'black'
   },
+  Text: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginTop: 20
+  },
+  Button: {
+    marginTop: 20,
+    borderRadius: 5,
+    backgroundColor: '#78a8f3',
+    padding: 10,
+    width: '40%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  error: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    width: '40%',
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#f8d7da',
+  },
+  success: {
+    color: 'green',
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    width: '40%',
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#d4edda',
+  }
 });
+
