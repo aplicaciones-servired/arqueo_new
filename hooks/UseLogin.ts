@@ -67,6 +67,3 @@ export default function UseLogin(props: { Usuario: any; Contraseña: any }) {
 
   return { loading, handleLogin, error };
 }
-function login() {
-  throw new Error("Function not implemented.");
-}

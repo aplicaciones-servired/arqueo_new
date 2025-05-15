@@ -17,7 +17,7 @@ export default function LoginScreen() {
       <StatusBar barStyle="dark-content" />
 
       <View style={styles.conten}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20}}>Arqueo multiempres</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20 }}>Arqueo multiempres</Text>
         <Image
           source={require('../../assets/images/logogane.webp')}
           style={{
@@ -43,10 +43,16 @@ export default function LoginScreen() {
           secureTextEntry={true}
         />
 
-        <Pressable style={styles.Button} onPress={handleLogin}>
-          <Text>
-            Iniciar sesion
-          </Text>
+        <Pressable
+          onPress={handleLogin}
+          style={({ pressed }) => [
+            styles.Button, // Primero aplica todos los estilos base del botón
+            {
+              transform: pressed ? [{ scale: 0.90 }] : [{ scale: 1 }],
+            }
+          ]}
+        >
+          <Text> Iniciar sesion</Text>
         </Pressable>
       </View>
 
