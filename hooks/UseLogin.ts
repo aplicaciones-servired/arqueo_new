@@ -1,10 +1,10 @@
 import { useAuth } from "@/auth/AuthProvider";
+import Alertas from "@/components/Alertas";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 
 export default function UseLogin(props: { Usuario: any; Contraseña: any }) {
-  
   const { Usuario, Contraseña } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export default function UseLogin(props: { Usuario: any; Contraseña: any }) {
 
   const handleLogin = async () => {
     if (!Usuario || !Contraseña) {
-      Alert.alert("Por favor complete todos los campos");
+      Alertas("Por favor complete todos los campos");
       return;
     }
 
@@ -51,8 +51,8 @@ export default function UseLogin(props: { Usuario: any; Contraseña: any }) {
       .then((res) => {
         console.log("Respuesta del login:", res.data);
         if (res.status === 200) {
-          setIsLoggedIn(true)
-          login()
+          setIsLoggedIn(true);
+          login();
         } else {
           setError("Error en la respuesta del servidor");
         }
