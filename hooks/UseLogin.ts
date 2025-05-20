@@ -1,5 +1,5 @@
 import { useAuth } from "@/auth/AuthProvider";
-import Alertas from "@/components/Alertas";
+import Alertas from "@/components/ui/Alertas";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";

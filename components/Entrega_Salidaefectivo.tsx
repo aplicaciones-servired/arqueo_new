@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
-import Alertas from './Alertas';
+import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemeInput } from './ThemeInput';
+import Alertas from './ui/Alertas';
 
 
 export const Entrega_salida = () => {
@@ -93,7 +93,8 @@ export const Entrega_salida = () => {
                     onChangeText={setVenta_bruta}
                     value={Venta_bruta}
                     placeholder="Venta Bruta"
-                    keyboardType="numeric"
+                    keyboardType="decimal-pad"
+                    onBlur={() => Keyboard.dismiss()}
                 />
 
                 <ThemeInput
@@ -221,11 +222,11 @@ export const Entrega_salida = () => {
 
 const styles = StyleSheet.create({
     Calcular: {
-    borderRadius: 5,
-    backgroundColor: '#78a8f3',
-    padding: 10,
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+        borderRadius: 5,
+        backgroundColor: '#78a8f3',
+        padding: 10,
+        width: '80%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import Alertas from './Alertas';
 import { ThemedText } from './ThemedText';
 import { ThemeInput } from './ThemeInput';
+import Alertas from './ui/Alertas';
 
 export const Caja_Rollos = () => {
     const [Total_monedasCaja, setTotal_monedasCaja] = useState('')

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
         borderRadius: 70,
-        backgroundColor: '#fff',
+        backgroundColor: 'transparent', // <- cambio aquí
         textAlign: 'center',
     },
 });

@@ -1,4 +1,7 @@
 import { useAuth } from '@/auth/AuthProvider';
+import { Firma } from '@/components/Firma';
+import { useImagePicker } from '@/components/ImagePickerComponent';
+import { useLocationComponent } from '@/components/Location';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { usePreguntasChec } from '@/components/Preguntas_Chec';
 import { ThemedText } from '@/components/ThemedText';
@@ -12,7 +15,10 @@ import { Caja_Rollos } from '../../components/Caja_Rollos';
 import { Entrega_salida } from '../../components/Entrega_Salidaefectivo';
 import { Raspas } from '../../components/Raspas';
 
-export default function ArqueoForm() {
+export default function ArqueoForm(props: { firmaAuditoria: any; firmaColocador: any }) {
+  const { firmaAuditoria, firmaColocador } = props;
+  console.log('first', firmaAuditoria);
+  console.log('second', firmaColocador);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [showScanner, setShowScanner] = useState(false);
   const [Punto_venta, setPunto_venta] = useState('');
@@ -27,16 +33,17 @@ export default function ArqueoForm() {
     cedula: '',
     sucursal: ''
   });
+  const { Entrega_salidaComponent } = Entrega_salida();
 
-  const {Entrega_salidaComponent
-  } = Entrega_salida();
-
-  const { Pregunta1, PreguntasChecComponent } = usePreguntasChec();
-  console.log('hola', Pregunta1)
+  const { PreguntasChecComponent } = usePreguntasChec();
 
   const { Caja_RollosComponent } = Caja_Rollos();
 
   const { RaspasComponent } = Raspas();
+
+  const { ImageComponent } = useImagePicker();
+
+  const { latitude, longitude } = useLocationComponent();
 
   // Solicitar permisos de cámara
   useEffect(() => {
@@ -96,11 +103,9 @@ export default function ArqueoForm() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.conten}>
-        <ParallaxScrollView headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }} >
+        <ParallaxScrollView headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}>
           <ThemedText type="title">Arqueo multiempres</ThemedText>
           <ThemedView style={styles.titleContainer}>
-
-
             <Pressable
               onPress={() => setShowScanner(!showScanner)}
               style={({ pressed }) => [
@@ -200,13 +205,21 @@ export default function ArqueoForm() {
 
                 <PreguntasChecComponent />
 
+                <ImageComponent />
+
+                <Firma />
 
               </ThemedView>
+
             </>
           )}
+          <View style={styles.locationRow}>
+            <ThemedText>{latitude}</ThemedText>
+            <ThemedText>{longitude}</ThemedText>
+          </View>
         </ParallaxScrollView>
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
 
@@ -214,6 +227,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2563eb', // azul fuerte de fondo
+    borderRadius: 16,
+
   },
   conten: {
     width: '92%',
@@ -283,5 +298,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     marginTop: 300,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 16,
+    marginTop: 8,
   },
 });
