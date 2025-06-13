@@ -1,68 +1,57 @@
-import { useAuth } from "@/auth/AuthProvider";
-import Alertas from "@/components/ui/Alertas";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
+// hooks/UseLogin.ts
+import Alertas from '@/components/ui/Alertas';
+import { useAuth } from '@/context/AuthProvider';
+import axios from 'axios';
+import { useState } from 'react';
 
-export default function UseLogin(props: { Usuario: any; Contraseña: any }) {
-  const { Usuario, Contraseña } = props;
+interface LoginResponse {
+  perfil?: string;
+}
+
+export default function UseLogin({ Usuario, Contraseña }: { Usuario: string; Contraseña: string }) {
+  const Url = process.env.EXPO_PUBLIC_LOGIN;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, setIsLoggedIn } = useAuth();
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError(null);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [error, loading]);
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     if (!Usuario || !Contraseña) {
-      Alertas("Por favor complete todos los campos");
+      Alertas('Por favor complete todos los campos');
+      return;
+    }
+
+    if (!Url) {
+      setError('URL de inicio de sesión no configurada. Contacte a soporte.');
       return;
     }
 
     setLoading(true);
-
-    let url = "";
-    if (Platform.OS === "android") {
-      url = `http://ganeyumbo.ddns.net/clientes/login/login_new.php`;
-    } else {
-      url = `http://172.20.1.92/clientes/login/login_new.php`;
-    }
-
-    axios
-      .post(
-        url,
-        {
-          login: Usuario,
-          pass: Contraseña,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+    try {
+      const res = await axios.post<LoginResponse>(Url, {
+        login: Usuario,
+        pass: Contraseña,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         }
-      )
-      .then((res) => {
-        console.log("Respuesta del login:", res.data);
-        if (res.status === 200) {
-          setIsLoggedIn(true);
-          login();
-        } else {
-          setError("Error en la respuesta del servidor");
-        }
-      })
-      .catch((error) => {
-        setError("Error al iniciar sesión");
-      })
-      .then(() => {
-        setLoading(false);
       });
+
+      const perfilRaw = res.data?.perfil?.trim()?.toUpperCase();
+      console.log('Respuesta del login:', res.data);
+
+      if (res.status === 200 && (perfilRaw === 'AUDITORIA-MULTIRED' || perfilRaw === 'AUDITORIA-SERVIRED')) {
+        await login(perfilRaw); // Usa la función login del AuthProvider
+      } else {
+        setError('Perfil no autorizado');
+      }
+
+    } catch (err) {
+      console.error('Error en login:', err);
+      setError('Error al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return { loading, handleLogin, error };

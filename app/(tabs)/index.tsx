@@ -1,16 +1,23 @@
+// screens/LoginScreen.tsx
 import { ThemeInput } from '@/components/ThemeInput';
+import { useAuth } from '@/context/AuthProvider';
 import UseLogin from '@/hooks/UseLogin';
 import { useState } from 'react';
 import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 export default function LoginScreen() {
-  const [Usuario, setUsuario] = useState('')
-  const [Contraseña, setContraseña] = useState('')
+  const [Usuario, setUsuario] = useState('');
+  const [Contraseña, setContraseña] = useState('');
+  const { loading: authLoading } = useAuth();
+  const { loading, handleLogin, error } = UseLogin({ Usuario, Contraseña });
 
-  const { loading, handleLogin, error } = UseLogin({
-    Usuario,
-    Contraseña
-  });
+  if (authLoading) {
+    return (
+      <View style={styles.container}>
+        <Text>Cargando...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -25,16 +32,17 @@ export default function LoginScreen() {
             height: 100,
             resizeMode: 'contain',
             marginTop: 20
-          }} />
+          }} 
+        />
 
-        <Text style={styles.Text} >Usuario</Text>
+        <Text style={styles.Text}>Usuario</Text>
         <ThemeInput
           style={styles.input}
           onChangeText={text => setUsuario(text)}
           value={Usuario}
           placeholder="ingresar usuario"
         />
-        <Text style={styles.Text} >Contraseña</Text>
+        <Text style={styles.Text}>Contraseña</Text>
         <ThemeInput
           style={styles.input}
           onChangeText={text => setContraseña(text)}
@@ -46,20 +54,19 @@ export default function LoginScreen() {
         <Pressable
           onPress={handleLogin}
           style={({ pressed }) => [
-            styles.Button, // Primero aplica todos los estilos base del botón
+            styles.Button,
             {
               transform: pressed ? [{ scale: 0.90 }] : [{ scale: 1 }],
             }
           ]}
         >
-          <Text> Iniciar sesion</Text>
+          <Text>Iniciar sesión</Text>
         </Pressable>
+
+        {error && <Text style={styles.error}>{error}</Text>}
+        {loading && <Text style={styles.success}>Cargando...</Text>}
       </View>
-
-      {error && <Text style={styles.error}>{error}</Text>}
-      {loading && <Text style={styles.success}> {loading ? 'Cargando...' : 'Iniciar sesión'}</Text>}
-
-    </View >
+    </View>
   );
 }
 
@@ -76,17 +83,17 @@ const styles = StyleSheet.create({
   conten: {
     width: '90%',
     minHeight: 380,
-    backgroundColor: '#c7e0fa', // azul más notorio
+    backgroundColor: '#c7e0fa',
     borderWidth: 2,
-    borderColor: '#2563eb', // azul fuerte para el borde
+    borderColor: '#2563eb',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
     alignSelf: 'center',
     paddingVertical: 24,
     paddingHorizontal: 10,
-    elevation: 4, // sombra en Android
-    shadowColor: '#000', // sombra en iOS
+    elevation: 4,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4
@@ -139,4 +146,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#d4edda',
   }
 });
-

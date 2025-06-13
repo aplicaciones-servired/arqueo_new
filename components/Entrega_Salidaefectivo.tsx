@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { Keyboard, Pressable, StyleSheet } from 'react-native';
-import { ThemedText } from './ThemedText';
-import { ThemeInput } from './ThemeInput';
+import { useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
 import Alertas from './ui/Alertas';
 
 
@@ -22,6 +20,19 @@ export const Entrega_salida = () => {
     const [Total_billetes, setTotal_billetes] = useState('')
     const [Total_arqueo, setTotal_arqueo] = useState('')
     const [Sobrante_Faltante, setSobrante_Faltante] = useState('')
+
+    useEffect(() => {
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                Keyboard.dismiss();
+            }
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+        };
+    }, []);
 
     const handleCalcular = () => {
         if (!Venta_bruta) {
@@ -84,115 +95,9 @@ export const Entrega_salida = () => {
 
     }
 
-    const Entrega_salidaComponent = () => {
-
-        return (
-            <>
-                <ThemedText type='subtitle'>Entrega Efectivo</ThemedText>
-                <ThemeInput
-                    onChangeText={setVenta_bruta}
-                    value={Venta_bruta}
-                    placeholder="Venta Bruta"
-                    keyboardType="decimal-pad"
-                    onBlur={() => Keyboard.dismiss()}
-                />
-
-                <ThemeInput
-                    onChangeText={setBase_efectivo}
-                    value={Base_efectivo}
-                    placeholder="Base Efectivo"
-                    keyboardType="numeric"
-                />
-
-                <ThemeInput
-                    onChangeText={setCartera}
-                    value={Cartera}
-                    placeholder="Cartera"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    value={Total_ingreso}
-                    placeholder="Total Ingreso"
-                />
-
-
-                <ThemedText type='subtitle'>Salida efectivo</ThemedText>
-                <ThemeInput
-                    onChangeText={setChance_abonados}
-                    value={Chance_abonados}
-                    placeholder="Chance abonados"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    onChangeText={setChance_impresos}
-                    value={Chance_impresos}
-                    placeholder="Chance impresos"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    onChangeText={setPremios_pagados}
-                    value={Premios_pagados}
-                    placeholder="Premios pagados"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    onChangeText={setEfectivo_cajafuerte}
-                    value={Efectivo_cajafuerte}
-                    placeholder="Efectivo caja fuerte"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    onChangeText={setTirilla_recaudo}
-                    value={Tirilla_recaudo}
-                    placeholder="Tirilla recaudo"
-                    keyboardType="numeric"
-                />
-
-                <ThemeInput
-                    value={Total_egresos}
-                    placeholder="Total Egresos"
-                />
-                <ThemedText type='subtitle'>Total Arqueo</ThemedText>
-                <ThemeInput
-                    onChangeText={setTotal_monedas}
-                    value={Total_monedas}
-                    placeholder="Total billetes"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    onChangeText={setTotal_billetes}
-                    value={Total_billetes}
-                    placeholder="Total monedas"
-                    keyboardType="numeric"
-                />
-                <ThemeInput
-                    value={Total_arqueo}
-                    placeholder="Total arqueo"
-                />
-
-                <ThemeInput
-                    value={Sobrante_Faltante}
-                    placeholder="SOBRANTE - FALTANTE"
-                />
-
-                <Pressable
-                    onPress={handleCalcular}
-                    style={({ pressed }) => [
-                        styles.Calcular, // Primero aplica todos los estilos base del botón
-                        {
-                            transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
-                        }
-                    ]}
-                >
-                    <ThemedText>Realizar Operaciones</ThemedText>
-                </Pressable>
-            </>
-        );
-    };
-
+   
 
     return {
-        Entrega_salidaComponent,
         // Estados de ingresos
         Venta_bruta, setVenta_bruta,
         Base_efectivo, setBase_efectivo,
@@ -201,6 +106,7 @@ export const Entrega_salida = () => {
 
         // Estados de egresos
         Chance_abonados, setChance_abonados,
+        
         Chance_impresos, setChance_impresos,
         Premios_pagados, setPremios_pagados,
         Efectivo_cajafuerte, setEfectivo_cajafuerte,
@@ -218,15 +124,3 @@ export const Entrega_salida = () => {
     };
 
 };
-
-
-const styles = StyleSheet.create({
-    Calcular: {
-        borderRadius: 5,
-        backgroundColor: '#78a8f3',
-        padding: 10,
-        width: '80%',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

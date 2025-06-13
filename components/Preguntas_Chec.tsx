@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, useColorScheme } from 'react-native';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
+import { useCallback, useEffect, useState } from 'react';
 
-export const usePreguntasChec = () => {
+interface FirmaProps {
+    requisito: (firma: string) => void;
+}
+
+export const usePreguntasChec = ({ requisito }: FirmaProps) => {
     // Estado para todas las preguntas
     const [preguntas, setPreguntas] = useState([
         { id: 1, texto: 'Tiene la puerta asegurada?', estado: 'NO CUMPLE' },
@@ -47,118 +48,29 @@ export const usePreguntasChec = () => {
     // Función optimizada con useCallback para mejor rendimiento
     const togglePregunta = useCallback((id: number) => {
         setPreguntas(prev => {
-            const newPreguntas = [...prev];
-            const index = newPreguntas.findIndex(p => p.id === id);
-            if (index !== -1) {
-                newPreguntas[index] = {
-                    ...newPreguntas[index],
-                    estado: newPreguntas[index].estado === 'CUMPLE' ? 'NO CUMPLE' : 'CUMPLE'
-                };
-            }
+            const newPreguntas = prev.map(p =>
+                p.id === id
+                    ? { ...p, estado: p.estado === 'CUMPLE' ? 'NO CUMPLE' : 'CUMPLE' }
+                    : p
+            );
             return newPreguntas;
         });
     }, []);
 
-    // Componente que renderiza todas las preguntas
-    const PreguntasChecComponent = () => {
-        const colorScheme = useColorScheme();
 
-        return (
-            <>
-                <ThemedText type='title' style={styles.titulo}>
-                    Verificación del punto de venta
-                </ThemedText>
 
-                {preguntas.map((pregunta) => (
-                    <ThemedView key={pregunta.id} style={styles.preguntaContainer}>
-                        <ThemedText type='subtitle' style={styles.textoPregunta}>
-                            {pregunta.id}. {pregunta.texto}
-                        </ThemedText>
-                        <ThemedView
-                            style={[
-                                styles.cont,
-                                {
-                                    borderColor: colorScheme === 'light' ? 'black' : 'white',
-                                },
-                            ]}
-                        >
-                            <Pressable
-                                onPress={() => togglePregunta(pregunta.id)}
-                                style={[
-                                    styles.checkbox,
-                                    {
-                                        borderColor: colorScheme === 'light' ? 'black' : 'white',
-                                        backgroundColor: pregunta.estado === 'CUMPLE' ? '#b0f0a3' : '#f7a3a3',
-                                    },
-                                ]}
-                            >
-                                <ThemedText style={styles.emoji}>
-                                    {pregunta.estado === 'CUMPLE' ? '✅' : '❌'}
-                                </ThemedText>
-                            </Pressable>
-                            <ThemedText type='subtitle' style={styles.textoEstado}>
-                                {pregunta.estado}
-                            </ThemedText>
-                        </ThemedView>
-                    </ThemedView>
-                ))}
-            </>
-        );
-    };
-
-    // Función para obtener los estados actuales
-    const obtenerEstados = useCallback(() => {
-        return preguntas.reduce((acc, pregunta) => {
-            acc[`Pregunta${pregunta.id}`] = pregunta.estado;
+    useEffect(() => {
+        // Puedes enviar como objeto o como string, según lo que necesites en el backend
+        const estados = preguntas.reduce((acc: Record<string, string>, p) => {
+            acc[`requisito${p.id}`] = p.estado;
             return acc;
-        }, {} as Record<string, string>);
-    }, [preguntas]);
+        }, {});
+        requisito(JSON.stringify(estados)); // o solo estados si no quieres string
+    }, [preguntas, requisito]);
 
     return {
-        estadosPreguntas: obtenerEstados(),
-        PreguntasChecComponent
+        preguntas,
+        togglePregunta,
     };
-};
 
-const styles = StyleSheet.create({
-    titulo: {
-        textAlign: 'center',
-        marginVertical: 20,
-        fontSize: 22,
-        fontWeight: 'bold',
-    },
-    preguntaContainer: {
-        marginBottom: 15,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    textoPregunta: {
-        marginBottom: 8,
-        textAlign: 'center',
-    },
-    cont: {
-        width: '100%',
-        minHeight: 80,
-        borderWidth: 2,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 15,
-    },
-    checkbox: {
-        width: 150,
-        height: 60,
-        borderRadius: 10,
-        borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 10,
-    },
-    emoji: {
-        fontSize: 28,
-    },
-    textoEstado: {
-        marginTop: 5,
-        fontWeight: 'bold',
-    },
-});
+};

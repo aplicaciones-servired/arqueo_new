@@ -1,6 +1,6 @@
 import { ToastAndroid } from 'react-native';
 
-export default function Alertas(props: string) {
+export default function Alertas(props: any) {
     return (
         ToastAndroid.showWithGravityAndOffset(
             props,
