@@ -1,5 +1,6 @@
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
+import Alertas from './ui/Alertas';
 
 interface FirmaProps {
   setlatitude: (lat: number | undefined) => void;
@@ -14,7 +15,7 @@ export function useLocationComponent({ setlatitude, setlongitude }: FirmaProps) 
         async function getCurrentLocation() {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
+                Alertas("Se necesitan permisos para la localizacion");
                 return;
             }
 

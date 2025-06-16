@@ -9,6 +9,7 @@ import { usePreguntasChec } from '@/components/Preguntas_Chec';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemeInput } from '@/components/ThemeInput';
+import Alertas from '@/components/ui/Alertas';
 import { useAuth } from '@/context/AuthProvider';
 import PostArqeuo from '@/hooks/PostArqeuo';
 import { Camera, CameraView } from 'expo-camera';
@@ -334,6 +335,10 @@ export default function ArqueoForm() {
           style={styles.permissionButton}
           onPress={async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
+            if (status !== 'granted') {
+              Alertas("Se necesitan permisos para la camara");
+              return;
+            }
             setHasPermission(status === 'granted');
           }}
         >

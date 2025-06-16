@@ -1,6 +1,7 @@
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
+import Alertas from './ui/Alertas';
 
 export const useImagePicker = () => {
     const [image, setImage] = useState<string | null>(null);
@@ -11,7 +12,7 @@ export const useImagePicker = () => {
         try {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (status !== 'granted') {
-                alert("Se necesitan permisos para acceder a la galería");
+                Alertas("Se necesitan permisos para acceder a la galería");
                 return;
             }
 
