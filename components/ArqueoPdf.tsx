@@ -10,15 +10,11 @@ import Alertas from './ui/Alertas';
 
 
 export function ArquePdf() {
-    
-    const { perfil } = useAuth();
-    console.log('pdf', perfil)
 
+    const { perfil } = useAuth();
+    
     const servired = process.env.EXPO_PUBLIC_PDF_SERVIRED;
     const multired = process.env.EXPO_PUBLIC_PDF_MULTIRED;
-
-    console.log('first', servired)
-    console.log('first', multired)
 
     let url = "";
 
@@ -27,6 +23,7 @@ export function ArquePdf() {
     } else {
         url = servired || "";
     }
+
 
     const [loading, setLoading] = useState(false);
     // const [imagen, setImagen] = useState(null); // This state is not used in the provided code

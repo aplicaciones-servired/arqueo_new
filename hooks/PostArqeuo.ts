@@ -1,11 +1,10 @@
 import Alertas from "@/components/ui/Alertas";
-import { useAuth } from "@/context/AuthProvider";
 import axios from "axios";
 
 export default function PostArqeuo(params: any) {
-  const { perfil } = useAuth();
 
   const enviarArqueo = async () => {
+    const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
     const servired = process.env.EXPO_PUBLIC_SERVIRED;
@@ -151,6 +150,7 @@ export default function PostArqeuo(params: any) {
       )
       .then((res) => {
         if (res.status === 200) {
+          console.log('res', res)
           Alertas("se ingreso el arqueo correctamente");
           return true;
         } else {

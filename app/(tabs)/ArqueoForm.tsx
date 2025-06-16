@@ -203,7 +203,8 @@ export default function ArqueoForm() {
     Supervisor,
     ...requisitosObj,
     latitude,
-    longitude
+    longitude,
+    perfil
   });
 
 
