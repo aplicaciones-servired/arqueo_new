@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Arqueo Multiempresa",
-    "slug": "arqueo",
+    "slug": "arqueo-new",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/descarga.png",
@@ -47,8 +47,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "c71d3925-6640-4e66-95f6-d82f27caf211"
+        "projectId": "5b69cdb6-2828-4a0a-97a7-0484f447d44c"
       }
-    }
+    },
+    "owner": "aplicaciones"
   }
 }
