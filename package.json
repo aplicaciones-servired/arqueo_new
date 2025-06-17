@@ -10,6 +10,11 @@
     "web": "expo start --web",
     "lint": "expo lint"
   },
+  "overrides": {
+    "rimraf": "^4.0.0",
+    "glob": "^9.0.0",
+    "inflight": false
+  },
   "expo": {
     "plugins": [
       [
@@ -75,7 +80,8 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "react-native-web": "~0.20.0"
+    "react-native-web": "~0.20.0",
+    "some-library": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
