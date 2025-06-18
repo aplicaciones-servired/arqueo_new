@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/AuthProvider";
 import { Arqueo } from "@/types/Arqueo";
 import axios from "axios";
+import Constants from "expo-constants";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import React, { useState } from 'react';
@@ -8,13 +9,12 @@ import { Pressable, StyleSheet } from 'react-native';
 import { ThemedText } from "./ThemedText";
 import Alertas from './ui/Alertas';
 
-
 export function ArquePdf() {
 
     const { perfil } = useAuth();
-    
-    const servired = process.env.EXPO_PUBLIC_PDF_SERVIRED;
-    const multired = process.env.EXPO_PUBLIC_PDF_MULTIRED;
+
+    const servired = Constants.expoConfig?.extra?.EXPO_PUBLIC_PDF_SERVIRED;
+    const multired = Constants.expoConfig?.extra?.EXPO_PUBLIC_PDF_MULTIRED;
 
     let url = "";
 

@@ -1,5 +1,6 @@
 import Alertas from "@/components/ui/Alertas";
 import axios from "axios";
+import Constants from "expo-constants";
 
 export default function PostArqeuo(params: any) {
 
@@ -7,8 +8,8 @@ export default function PostArqeuo(params: any) {
     const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
-    const servired = process.env.EXPO_PUBLIC_SERVIRED;
-    const multired = process.env.EXPO_PUBLIC_MULTIRED;
+    const servired = Constants.expoConfig?.extra?.EXPO_PUBLIC_SERVIRED;
+    const multired = Constants.expoConfig?.extra?.EXPO_PUBLIC_MULTIRED;
 
     let Url = "";
 

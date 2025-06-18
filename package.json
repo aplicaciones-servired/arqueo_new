@@ -1,5 +1,5 @@
 {
-  "name": "arqueo_new",
+  "name": "ARQUEO MULTIEMPRESA",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "license": "MIT",
@@ -39,7 +39,7 @@
         }
       ]
     ],
-    "icon": "./assets/images/descarga-cuadrada.png",
+    "icon": "./assets/images/descarga.png",
     "doctor": {
       "reactNativeDirectoryCheck": {
         "exclude": [
@@ -67,7 +67,7 @@
     "axios": "^1.9.0",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
-    "expo": "~53.0.9",
+    "expo": "53.0.12",
     "expo-av": "~15.1.6",
     "expo-blur": "~14.1.4",
     "expo-camera": "~16.1.6",
@@ -87,12 +87,12 @@
     "expo-sqlite": "~15.2.10",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
-    "expo-system-ui": "~5.0.7",
-    "expo-web-browser": "~14.1.6",
+    "expo-system-ui": "~5.0.9",
+    "expo-web-browser": "~14.2.0",
     "json-schema-traverse": "^1.0.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.79.3",
+    "react-native": "0.79.4",
     "react-native-checkBox": "^0.0.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",

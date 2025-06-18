@@ -2,6 +2,7 @@
 import Alertas from "@/components/ui/Alertas";
 import { useAuth } from "@/context/AuthProvider";
 import axios from "axios";
+import Constants from "expo-constants";
 import { useState } from "react";
 
 interface LoginResponse {
@@ -15,7 +16,7 @@ export default function UseLogin({
   Usuario: string;
   Contraseña: string;
 }) {
-  const Url = process.env.EXPO_PUBLIC_LOGIN;
+  const Url = Constants.expoConfig?.extra?.EXPO_PUBLIC_LOGIN;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
