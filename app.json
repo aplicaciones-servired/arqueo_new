@@ -1,16 +1,13 @@
 {
   "expo": {
     "name": "Arqueo Multiempresa",
-    "slug": "arqueo-new",
+    "slug": "arqueonew",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/descarga.png",
     "scheme": "arqueo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -47,7 +44,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "5b69cdb6-2828-4a0a-97a7-0484f447d44c"
+        "projectId": "3fec5562-a7f6-4e72-8a9a-2a42aa7272ef"
       }
     },
     "owner": "aplicaciones"

@@ -2,6 +2,7 @@
   "name": "arqueo_new",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -46,6 +47,8 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@shopify/react-native-skia": "2.0.0-next.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "axios": "^1.9.0",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
@@ -72,6 +75,7 @@
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.7",
     "expo-web-browser": "~14.1.6",
+    "json-schema-traverse": "^1.0.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
@@ -88,8 +92,8 @@
     "@types/axios": "^0.9.36",
     "@types/base-64": "^1.0.2",
     "@types/react": "~19.0.10",
-    "eslint": "^9.25.0",
-    "eslint-config-expo": "~9.2.0",
+    "eslint": "^9.29.0",
+    "eslint-config-expo": "^9.2.0",
     "typescript": "~5.8.3"
   },
   "private": true
