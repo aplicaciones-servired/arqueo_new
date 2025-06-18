@@ -38,7 +38,22 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
-    ]
+    ],
+    "icon": "./assets/images/descarga-cuadrada.png",
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "ajv",
+          "ajv-keywords",
+          "base-64",
+          "buffer",
+          "json-schema-traverse",
+          "react-native-checkBox",
+          "expo-barcode-scanner"
+        ],
+        "listUnknownPackages": false
+      }
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -54,7 +69,7 @@
     "buffer": "^6.0.3",
     "expo": "~53.0.9",
     "expo-av": "~15.1.6",
-    "expo-barcode-scanner": "^13.0.1",
+    "expo-barcode-scanner": "^14.0.0",
     "expo-blur": "~14.1.4",
     "expo-camera": "~16.1.6",
     "expo-constants": "~17.1.6",
@@ -84,8 +99,7 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "react-native-web": "~0.20.0",
-    "some-library": "^1.0.0"
+    "react-native-web": "~0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
