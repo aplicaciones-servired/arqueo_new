@@ -1,15 +1,15 @@
 import Alertas from "@/components/ui/Alertas";
 import axios from "axios";
-import Constants from "expo-constants";
 
 export default function PostArqeuo(params: any) {
-
   const enviarArqueo = async () => {
     const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
-    const servired = Constants.expoConfig?.extra?.EXPO_PUBLIC_SERVIRED;
-    const multired = Constants.expoConfig?.extra?.EXPO_PUBLIC_MULTIRED;
+    const servired =
+      "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/registro_arqueo_servired.php";
+    const multired =
+      "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/registro_arqueo_multired.php";
 
     let Url = "";
 
@@ -151,7 +151,7 @@ export default function PostArqeuo(params: any) {
       )
       .then((res) => {
         if (res.status === 200) {
-          console.log('res', res)
+          console.log("res", res);
           Alertas("se ingreso el arqueo correctamente");
           return true;
         } else {

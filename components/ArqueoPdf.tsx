@@ -1,7 +1,6 @@
 import { useAuth } from "@/context/AuthProvider";
 import { Arqueo } from "@/types/Arqueo";
 import axios from "axios";
-import Constants from "expo-constants";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import React, { useState } from 'react';
@@ -13,8 +12,8 @@ export function ArquePdf() {
 
     const { perfil } = useAuth();
 
-    const servired = Constants.expoConfig?.extra?.EXPO_PUBLIC_PDF_SERVIRED;
-    const multired = Constants.expoConfig?.extra?.EXPO_PUBLIC_PDF_MULTIRED;
+    const servired = "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/arqueo.php";
+    const multired = "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/arqueomultired.php";
 
     let url = "";
 
