@@ -8,8 +8,13 @@ import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-nativ
 export default function LoginScreen() {
   const [Usuario, setUsuario] = useState('');
   const [Contraseña, setContraseña] = useState('');
+  const [logs, setLogs] = useState<string[]>([]); // <-- Nuevo estado para logs
   const { loading: authLoading } = useAuth();
-  const { loading, handleLogin, error } = UseLogin({ Usuario, Contraseña });
+  const { loading, handleLogin, error } = UseLogin({
+    Usuario,
+    Contraseña,
+    onLog: (msg) => setLogs(logs => [...logs, msg]), // <-- Pasar función de log
+  });
 
   if (authLoading) {
     return (
@@ -32,7 +37,7 @@ export default function LoginScreen() {
             height: 100,
             resizeMode: 'contain',
             marginTop: 20
-          }} 
+          }}
         />
 
         <Text style={styles.Text}>Usuario</Text>
@@ -63,8 +68,17 @@ export default function LoginScreen() {
           <Text>Iniciar sesión</Text>
         </Pressable>
 
-        {error && <Text style={styles.error}>{error}</Text>}
-        {loading && <Text style={styles.success}>Cargando...</Text>}
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        {loading ? <Text style={styles.success}>Cargando...</Text> : null}
+
+        {logs.length > 0 && (
+          <View style={{ marginTop: 10, width: '90%' }}>
+            <Text style={{ fontWeight: 'bold' }}>Logs:</Text>
+            {logs.map((log, idx) => (
+              <Text key={idx} style={{ fontSize: 12, color: '#333' }}>{log}</Text>
+            ))}
+          </View>
+        )}
       </View>
     </View>
   );

@@ -15,11 +15,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  setIsLoggedIn: () => {},
+  setIsLoggedIn: () => { },
   perfil: null,
-  setPerfil: () => {},
-  login: async () => {},
-  logout: async () => {},
+  setPerfil: () => { },
+  login: async () => { },
+  logout: async () => { },
   loading: true,
 });
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const savedPerfil = await AsyncStorage.getItem('userPerfil');
         const savedIsLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-        
+
         if (savedPerfil && savedIsLoggedIn === 'true') {
           setPerfil(savedPerfil);
           setIsLoggedIn(true);
@@ -51,18 +51,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadAuthState();
   }, []);
 
+  // ...existing code...
   const login = async (perfil: string) => {
     try {
       await AsyncStorage.setItem('userPerfil', perfil);
       await AsyncStorage.setItem('isLoggedIn', 'true');
       setPerfil(perfil);
       setIsLoggedIn(true);
+      console.log("Login exitoso, perfil:", perfil); // <-- Agrega este log
       router.replace("/(tabs)/ArqueoForm");
     } catch (error) {
       console.error('Error during login:', error);
       throw error;
     }
   };
+  // ...existing code...
 
   const logout = async () => {
     try {
@@ -78,12 +81,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      isLoggedIn, 
-      setIsLoggedIn, 
-      perfil, 
+    <AuthContext.Provider value={{
+      isLoggedIn,
+      setIsLoggedIn,
+      perfil,
       setPerfil,
-      login, 
+      login,
       logout,
       loading
     }}>
