@@ -17,8 +17,9 @@ export default function UseLogin({
   Contraseña: string;
   onLog?: (msg: string) => void;
 }) {
-  const Url =
-    "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/login_new.php";
+
+  const apiUrl = process.env.EXPO_PUBLIC_LOGIN;
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
@@ -30,16 +31,16 @@ export default function UseLogin({
       return;
     }
 
-    if (!Url) {
+    if (!apiUrl) {
       setError("URL de inicio de sesión no configurada. Contacte a soporte.");
       onLog && onLog("URL no configurada");
       return;
     }
-    onLog && onLog("url: " + Url);
+    onLog && onLog("url: " + apiUrl);
     setLoading(true);
     try {
       const res = await axios.post<LoginResponse>(
-        Url,
+        apiUrl,
         {
           login: Usuario,
           pass: Contraseña,

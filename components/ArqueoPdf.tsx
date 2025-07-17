@@ -12,15 +12,16 @@ export function ArquePdf() {
 
     const { perfil } = useAuth();
 
-    const servired = "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/arqueo.php";
-    const multired = "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/arqueomultired.php";
+    const SERVIRED = process.env.EXPO_PUBLIC_SERVIRED;
+    const MULTIRED = process.env.EXPO_PUBLIC_MULTIRED;
+
 
     let url = "";
 
     if (perfil === "AUDITORIA-MULTIRED") {
-        url = multired || "";
+        url = MULTIRED || "";
     } else {
-        url = servired || "";
+        url = SERVIRED || "";
     }
 
 

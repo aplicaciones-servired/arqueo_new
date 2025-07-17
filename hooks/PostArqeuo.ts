@@ -6,17 +6,15 @@ export default function PostArqeuo(params: any) {
     const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
-    const servired =
-      "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/registro_arqueo_servired.php";
-    const multired =
-      "http://ganeyumbo.ddns.net/clientes/login/Arqueo_native/registro_arqueo_multired.php";
+    const SERVIRED = process.env.EXPO_PUBLIC_SERVIRED;
+    const MULTIRED = process.env.EXPO_PUBLIC_MULTIRED;
 
     let Url = "";
 
     if (perfil === "AUDITORIA-MULTIRED") {
-      Url = multired || "";
+      Url = MULTIRED || "";
     } else {
-      Url = servired || "";
+      Url = SERVIRED || "";
     }
 
     if (!params.ip || !params.nombre || !params.cedula || !params.sucursal) {
