@@ -15,15 +15,7 @@ export function ArquePdf() {
     const SERVIRED = process.env.EXPO_PUBLIC_SERVIRED;
     const MULTIRED = process.env.EXPO_PUBLIC_MULTIRED;
 
-
-    let url = "";
-
-    if (perfil === "AUDITORIA-MULTIRED") {
-        url = MULTIRED || "";
-    } else {
-        url = SERVIRED || "";
-    }
-
+    let url = perfil === 'AUDITORIA-MULTIRED' ? MULTIRED : SERVIRED;
 
     const [loading, setLoading] = useState(false);
     // const [imagen, setImagen] = useState(null); // This state is not used in the provided code
@@ -36,6 +28,10 @@ export function ArquePdf() {
         return `data:image/${type};base64,${cleanedData}`;
     };
 
+    if (!url) {
+        Alertas('no se encontro una url configurada para el PDF');
+        return null;
+    }
 
     const getHtml = (arqueos: Arqueo[]) => {
         return `

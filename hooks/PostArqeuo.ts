@@ -6,16 +6,9 @@ export default function PostArqeuo(params: any) {
     const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
-    const SERVIRED = process.env.EXPO_PUBLIC_SERVIRED;
-    const MULTIRED = process.env.EXPO_PUBLIC_MULTIRED;
+    const MULTIEMPRESA = process.env.EXPO_PUBLIC_MULTIEMPRESA;
 
-    let Url = "";
-
-    if (perfil === "AUDITORIA-MULTIRED") {
-      Url = MULTIRED || "";
-    } else {
-      Url = SERVIRED || "";
-    }
+    let Url = MULTIEMPRESA || '';
 
     if (!params.ip || !params.nombre || !params.cedula || !params.sucursal) {
       Alertas("tienes que leer el QR antes de enviar");
@@ -27,6 +20,7 @@ export default function PostArqeuo(params: any) {
       .post(
         Url,
         {
+          zona: params.perfil,
           ip: params.ip,
           nombres: params.nombre,
           documento: params.cedula,
@@ -148,21 +142,24 @@ export default function PostArqeuo(params: any) {
         }
       )
       .then((res) => {
-        if (res.status === 200) {
-          console.log("res", res);
-          Alertas("se ingreso el arqueo correctamente");
+        console.log("res", res);
+        const data = res.data as { success?: string; error?: string };
+        if (res.status === 200 && data.success) {
+          Alertas(data.success); // ✅ Muestra el mensaje del backend
           return true;
+        } else if (data.error) {
+          Alertas(data.error); // ⚠️ Muestra error detallado si viene del backend
+          return false;
         } else {
-          Alertas("Error al ingresar el arqueo");
+          Alertas("Error desconocido al ingresar el arqueo");
           return false;
         }
       })
       .catch((error) => {
-        console.error(
-          "Error en la petición:",
-          error.response?.data || error.message
-        );
-        Alertas("Error al enviar el arqueo");
+        const mensajeError =
+          error.response?.data?.error || error.message || "Error desconocido";
+        console.error("Error en la petición:", mensajeError);
+        Alertas(mensajeError); // ✅ Muestra el mensaje exacto que venga del backend
       });
 
     PostArqeuo(params);

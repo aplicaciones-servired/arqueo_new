@@ -29,6 +29,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  useEffect(() => {
+    const clearSessionOnStartup = async () => {
+      console.log("App reiniciada - limpiando sesión");
+      await AsyncStorage.removeItem('userPerfil');
+      await AsyncStorage.removeItem('isLoggedIn');
+      setIsLoggedIn(false);
+      setPerfil(null);
+      router.replace('/'); // Redirige al login
+      setLoading(false);
+    };
+
+    clearSessionOnStartup();
+  }, []);
+
   // Cargar estado al iniciar
   useEffect(() => {
     const loadAuthState = async () => {

@@ -69,7 +69,11 @@ export default function UseLogin({
       }
     } catch (err: any) {
       console.error("Error en login:", err);
-      setError("Error al iniciar sesión");
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
+      } else if (err.message) {
+        setError(err.message);
+      }
       onLog &&
         onLog("Error en login: " + (err?.message || JSON.stringify(err)));
     } finally {
