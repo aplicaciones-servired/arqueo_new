@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     clearSessionOnStartup();
-  }, []);
+  }, [router]);
 
   // Cargar estado al iniciar
   useEffect(() => {
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     loadAuthState();
-  }, []);
+  }, [router]);
 
   // ...existing code...
   const login = async (perfil: string) => {
