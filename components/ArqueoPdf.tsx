@@ -12,10 +12,7 @@ export function ArquePdf() {
 
     const { perfil } = useAuth();
 
-    const SERVIRED = process.env.EXPO_PUBLIC_SERVIRED;
-    const MULTIRED = process.env.EXPO_PUBLIC_MULTIRED;
-
-    let url = perfil === 'AUDITORIA-MULTIRED' ? MULTIRED : SERVIRED;
+    const ARQUEO = process.env.EXPO_PUBLIC_PDF;
 
     const [loading, setLoading] = useState(false);
     // const [imagen, setImagen] = useState(null); // This state is not used in the provided code
@@ -28,7 +25,7 @@ export function ArquePdf() {
         return `data:image/${type};base64,${cleanedData}`;
     };
 
-    if (!url) {
+    if (!ARQUEO) {
         Alertas('no se encontro una url configurada para el PDF');
         return null;
     }
@@ -232,12 +229,18 @@ export function ArquePdf() {
     const print = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            });
+            const res = await axios.get(
+                ARQUEO,
+                {
+                    params: {
+                        perfil: perfil,
+                    },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                }
+            );
             if (res.status === 200) {
                 const arqueos = res.data as Arqueo[];
                 await Print.printAsync({ html: getHtml(arqueos) });
@@ -256,12 +259,18 @@ export function ArquePdf() {
     const printToFile = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            });
+            const res = await axios.get(
+                ARQUEO,
+                {
+                    params: {
+                        perfil: perfil,
+                    },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                }
+            );
             if (res.status === 200) {
                 const arqueos = res.data as Arqueo[];
                 const { uri } = await Print.printToFileAsync({ html: getHtml(arqueos) });
