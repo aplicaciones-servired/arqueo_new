@@ -59,7 +59,7 @@ export default function UseLogin({
       if (
         res.status === 200 &&
         (perfilRaw === "AUDITORIA-MULTIRED" ||
-          perfilRaw === "AUDITORIA-SERVIRED")
+          perfilRaw === "AUDITORIA-SERVIRED"  || perfilRaw === "APLICACIONES")
       ) {
         await login(perfilRaw);
         onLog && onLog("Login exitoso, perfil: " + perfilRaw);

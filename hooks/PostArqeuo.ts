@@ -15,6 +15,11 @@ export default function PostArqeuo(params: any) {
       return;
     }
 
+    if (!params.firmaAuditoria || !params.firmaColocadora ) {
+      Alertas(" Debes firmar el arqueo antes de enviarlo");
+      return;
+    }
+
     console.log("PostArqeuo", Url);
     axios
       .post(
