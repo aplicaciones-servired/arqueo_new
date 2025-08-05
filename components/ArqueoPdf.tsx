@@ -238,6 +238,7 @@ export function ArquePdf() {
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
+                        Origin: "http://ganeyumbo.ddns.net",
                     },
                 }
             );
@@ -268,6 +269,7 @@ export function ArquePdf() {
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
+                        Origin: "http://ganeyumbo.ddns.net",
                     },
                 }
             );

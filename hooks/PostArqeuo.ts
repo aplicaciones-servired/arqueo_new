@@ -143,6 +143,7 @@ export default function PostArqeuo(params: any) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
+            Origin: "http://ganeyumbo.ddns.net",
           },
         }
       )
