@@ -1,5 +1,4 @@
-export const limpiarFormulario = (params: {
-  ssetFormData: (data: { ip: string; nombre: string; cedula: string; sucursal: string }) => void;
+interface LimpiarFormularioParams {
   setPunto_venta: (value: string) => void;
   setCategorizacion: (value: string) => void;
   setSupervisor: (value: any) => void;
@@ -7,7 +6,6 @@ export const limpiarFormulario = (params: {
   setlatitude: (value: number | undefined) => void;
   setlongitude: (value: number | undefined) => void;
 
-  // Campos de Entrega/Salida efectivo
   setVenta_bruta: (value: string) => void;
   setBase_efectivo: (value: string) => void;
   setCartera: (value: string) => void;
@@ -18,15 +16,12 @@ export const limpiarFormulario = (params: {
   setTirilla_recaudo: (value: string) => void;
   setTotal_monedas: (value: string) => void;
   setTotal_billetes: (value: string) => void;
-
-  // Campos de Caja/Rollos
   setTotal_monedasCaja: (value: string) => void;
   setTotal_billetesCaja: (value: string) => void;
   setTotal_premiosCaja: (value: string) => void;
   setRollos_bnet: (value: string) => void;
   setRollos_fisicos: (value: string) => void;
 
-  // Campos de Raspas (Juego 1-7)
   setnombre_juego: (value: string) => void;
   setcantidad_bnet: (value: string) => void;
   setcantidad_fisicos: (value: string) => void;
@@ -76,81 +71,111 @@ export const limpiarFormulario = (params: {
   setcantidad_tiquete7: (value: string) => void;
   setdescargado7: (value: string) => void;
 
-  // Resto de los setters...
-  [key: string]: any;
-}) => {
-  params.setFormData({ ip: '', nombre: '', cedula: '', sucursal: '' });
-  params.setPunto_venta('');
-  params.setCategorizacion('');
-  params.setSupervisor('');
-  params.setrequisito('');
+  setImage: (value: string | null) => void;
+  setNombre_observacion?: (value: string) => void;
+  setFirmaAuditoria?: (value: string) => void;
+  setFirmaColocadora?: (value: string) => void;
+}
+
+/**
+ * Función para limpiar todos los campos del formulario de arqueo
+ * Resetea todos los estados a sus valores iniciales (vacíos o undefined)
+ */
+export const limpiarFormulario = (params: LimpiarFormularioParams) => {
+  // Limpiar campos principales
+  params.setPunto_venta("");
+  params.setCategorizacion("");
+  params.setSupervisor(null);
+  params.setrequisito("");
   params.setlatitude(undefined);
   params.setlongitude(undefined);
 
-  params.setVenta_bruta('');
-  params.setBase_efectivo('');
-  params.setCartera('');
-  params.setChance_abonados('');
-  params.setChance_impresos('');
-  params.setPremios_pagados('');
-  params.setEfectivo_cajafuerte('');
-  params.setTirilla_recaudo('');
-  params.setTotal_monedas('');
-  params.setTotal_billetes('');
-  params.setTotal_monedasCaja('');
-  params.setTotal_billetesCaja('');
-  params.setTotal_premiosCaja('');
-  params.setRollos_bnet('');
-  params.setRollos_fisicos('');
+  // Limpiar Entrega Efectivo
+  params.setVenta_bruta("");
+  params.setBase_efectivo("");
+  params.setCartera("");
+  params.setChance_abonados("");
+  params.setChance_impresos("");
+  params.setPremios_pagados("");
+  params.setEfectivo_cajafuerte("");
+  params.setTirilla_recaudo("");
+  params.setTotal_monedas("");
+  params.setTotal_billetes("");
 
-  params.setnombre_juego('');
-  params.setcantidad_bnet('');
-  params.setcantidad_fisicos('');
-  params.setcantidad_faltante('');
-  params.setcantidad_tiquete('');
-  params.setdescargado('');
+  // Limpiar Caja Fuerte
+  params.setTotal_monedasCaja("");
+  params.setTotal_billetesCaja("");
+  params.setTotal_premiosCaja("");
+  params.setRollos_bnet("");
+  params.setRollos_fisicos("");
 
-  params.setnombre_juego2('');
-  params.setcantidad_bnet2('');
-  params.setcantidad_fisicos2('');
-  params.setcantidad_faltante2('');
-  params.setcantidad_tiquete2('');
-  params.setdescargado2('');
+  // Limpiar Juego 1
+  params.setnombre_juego("");
+  params.setcantidad_bnet("");
+  params.setcantidad_fisicos("");
+  params.setcantidad_faltante("");
+  params.setcantidad_tiquete("");
+  params.setdescargado("");
 
-  params.setnombre_juego3('');
-  params.setcantidad_bnet3('');
-  params.setcantidad_fisicos3('');
-  params.setcantidad_faltante3('');
-  params.setcantidad_tiquete3('');
-  params.setdescargado3('');
+  // Limpiar Juego 2
+  params.setnombre_juego2("");
+  params.setcantidad_bnet2("");
+  params.setcantidad_fisicos2("");
+  params.setcantidad_faltante2("");
+  params.setcantidad_tiquete2("");
+  params.setdescargado2("");
 
-  params.setnombre_juego4('');
-  params.setcantidad_bnet4('');
-  params.setcantidad_fisicos4('');
-  params.setcantidad_faltante4('');
-  params.setcantidad_tiquete4('');
-  params.setdescargado4('');
+  // Limpiar Juego 3
+  params.setnombre_juego3("");
+  params.setcantidad_bnet3("");
+  params.setcantidad_fisicos3("");
+  params.setcantidad_faltante3("");
+  params.setcantidad_tiquete3("");
+  params.setdescargado3("");
 
-  params.setnombre_juego5('');
-  params.setcantidad_bnet5('');
-  params.setcantidad_fisicos5('');
-  params.setcantidad_faltante5('');
-  params.setcantidad_tiquete5('');
-  params.setdescargado5('');
+  // Limpiar Juego 4
+  params.setnombre_juego4("");
+  params.setcantidad_bnet4("");
+  params.setcantidad_fisicos4("");
+  params.setcantidad_faltante4("");
+  params.setcantidad_tiquete4("");
+  params.setdescargado4("");
 
-  params.setnombre_juego6('');
-  params.setcantidad_bnet6('');
-  params.setcantidad_fisicos6('');
-  params.setcantidad_faltante6('');
-  params.setcantidad_tiquete6('');
-  params.setdescargado6('');
+  // Limpiar Juego 5
+  params.setnombre_juego5("");
+  params.setcantidad_bnet5("");
+  params.setcantidad_fisicos5("");
+  params.setcantidad_faltante5("");
+  params.setcantidad_tiquete5("");
+  params.setdescargado5("");
 
-  params.setnombre_juego7('');
-  params.setcantidad_bnet7('');
-  params.setcantidad_fisicos7('');
-  params.setcantidad_faltante7('');
-  params.setcantidad_tiquete7('');
-  params.setdescargado7('');
+  // Limpiar Juego 6
+  params.setnombre_juego6("");
+  params.setcantidad_bnet6("");
+  params.setcantidad_fisicos6("");
+  params.setcantidad_faltante6("");
+  params.setcantidad_tiquete6("");
+  params.setdescargado6("");
 
+  // Limpiar Juego 7
+  params.setnombre_juego7("");
+  params.setcantidad_bnet7("");
+  params.setcantidad_fisicos7("");
+  params.setcantidad_faltante7("");
+  params.setcantidad_tiquete7("");
+  params.setdescargado7("");
+
+  // Limpiar imagen
   params.setImage(null);
+
+  // Limpiar campos opcionales si están presentes
+  if (params.setNombre_observacion) {
+    params.setNombre_observacion("");
+  }
+  if (params.setFirmaAuditoria) {
+    params.setFirmaAuditoria("");
+  }
+  if (params.setFirmaColocadora) {
+    params.setFirmaColocadora("");
+  }
 };

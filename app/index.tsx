@@ -1,19 +1,26 @@
 // screens/LoginScreen.tsx
-import { ThemeInput } from '@/components/ThemeInput';
-import { useAuth } from '@/context/AuthProvider';
-import UseLogin from '@/hooks/UseLogin';
-import { useState } from 'react';
-import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ThemeInput } from "@/components/ThemeInput";
+import { useAuth } from "@/context/AuthProvider";
+import UseLogin from "@/hooks/UseLogin";
+import React, { useState } from "react";
+import {
+  Image,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function LoginScreen() {
-  const [Usuario, setUsuario] = useState('');
-  const [Contraseña, setContraseña] = useState('');
+  const [Usuario, setUsuario] = useState("");
+  const [Contraseña, setContraseña] = useState("");
   const [logs, setLogs] = useState<string[]>([]); // <-- Nuevo estado para logs
   const { loading: authLoading } = useAuth();
   const { loading, handleLogin, error } = UseLogin({
     Usuario,
     Contraseña,
-    onLog: (msg) => setLogs(logs => [...logs, msg]), // <-- Pasar función de log
+    onLog: (msg) => setLogs((logs) => [...logs, msg]), // <-- Pasar función de log
   });
 
   if (authLoading) {
@@ -29,28 +36,30 @@ export default function LoginScreen() {
       <StatusBar barStyle="dark-content" />
 
       <View style={styles.conten}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20 }}>Arqueo multiempres</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>
+          Arqueo multiempres
+        </Text>
         <Image
-          source={require('../assets/images/logogane.webp')}
+          source={require("../assets/images/logogane.webp")}
           style={{
             width: 300,
             height: 100,
-            resizeMode: 'contain',
-            marginTop: 20
+            resizeMode: "contain",
+            marginTop: 20,
           }}
         />
 
         <Text style={styles.Text}>Usuario</Text>
         <ThemeInput
           style={styles.input}
-          onChangeText={text => setUsuario(text)}
+          onChangeText={(text) => setUsuario(text)}
           value={Usuario}
           placeholder="ingresar usuario"
         />
         <Text style={styles.Text}>Contraseña</Text>
         <ThemeInput
           style={styles.input}
-          onChangeText={text => setContraseña(text)}
+          onChangeText={(text) => setContraseña(text)}
           value={Contraseña}
           placeholder="ingresar contraseña"
           secureTextEntry={true}
@@ -61,8 +70,8 @@ export default function LoginScreen() {
           style={({ pressed }) => [
             styles.Button,
             {
-              transform: pressed ? [{ scale: 0.90 }] : [{ scale: 1 }],
-            }
+              transform: pressed ? [{ scale: 0.9 }] : [{ scale: 1 }],
+            },
           ]}
         >
           <Text>Iniciar sesión</Text>
@@ -70,15 +79,6 @@ export default function LoginScreen() {
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {loading ? <Text style={styles.success}>Cargando...</Text> : null}
-
-        {logs.length > 0 && (
-          <View style={{ marginTop: 10, width: '90%' }}>
-            <Text style={{ fontWeight: 'bold' }}>Logs:</Text>
-            {logs.map((log, idx) => (
-              <Text key={idx} style={{ fontSize: 12, color: '#333' }}>{log}</Text>
-            ))}
-          </View>
-        )}
       </View>
     </View>
   );
@@ -87,76 +87,76 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    height: '147%',
+    width: "100%",
+    height: "147%",
     borderRadius: 10,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
   },
   conten: {
-    width: '90%',
+    width: "90%",
     minHeight: 380,
-    backgroundColor: '#c7e0fa',
+    backgroundColor: "#c7e0fa",
     borderWidth: 2,
-    borderColor: '#2563eb',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: "#2563eb",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 16,
-    alignSelf: 'center',
+    alignSelf: "center",
     paddingVertical: 24,
     paddingHorizontal: 10,
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
-    shadowRadius: 4
+    shadowRadius: 4,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginTop: 10,
-    width: '60%',
+    width: "60%",
     paddingHorizontal: 10,
     borderRadius: 5,
-    backgroundColor: '#fff',
-    color: 'black'
+    backgroundColor: "#fff",
+    color: "black",
   },
   Text: {
     fontSize: 15,
-    fontWeight: 'bold',
-    marginTop: 20
+    fontWeight: "bold",
+    marginTop: 20,
   },
   Button: {
     marginTop: 20,
     borderRadius: 5,
-    backgroundColor: '#78a8f3',
+    backgroundColor: "#78a8f3",
     padding: 10,
-    width: '40%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "40%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
-    fontWeight: 'bold',
-    width: '40%',
+    fontWeight: "bold",
+    width: "40%",
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#f8d7da',
+    backgroundColor: "#f8d7da",
   },
   success: {
-    color: 'green',
+    color: "green",
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
-    fontWeight: 'bold',
-    width: '40%',
+    fontWeight: "bold",
+    width: "40%",
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#d4edda',
-  }
+    backgroundColor: "#d4edda",
+  },
 });

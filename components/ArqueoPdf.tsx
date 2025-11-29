@@ -12,6 +12,7 @@ export function ArquePdf() {
 
     const { perfil } = useAuth();
 
+
     const ARQUEO = process.env.EXPO_PUBLIC_PDF;
 
     const [loading, setLoading] = useState(false);
@@ -229,12 +230,10 @@ export function ArquePdf() {
     const print = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(
+            const res = await axios.post(
                 ARQUEO,
+                perfil, // se envía en el body
                 {
-                    params: {
-                        perfil: perfil,
-                    },
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
@@ -260,12 +259,10 @@ export function ArquePdf() {
     const printToFile = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(
+            const res = await axios.post(
                 ARQUEO,
+                perfil, // se envía en el body
                 {
-                    params: {
-                        perfil: perfil,
-                    },
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",

@@ -2,30 +2,34 @@ import Alertas from "@/components/ui/Alertas";
 import axios from "axios";
 
 export default function PostArqeuo(params: any) {
-  const enviarArqueo = async () => {
+  const enviarArqueo = async (): Promise<boolean> => {
     const { perfil } = params;
     console.log("PostArqeuo", perfil);
 
     const MULTIEMPRESA = process.env.EXPO_PUBLIC_MULTIEMPRESA;
 
-    let Url = MULTIEMPRESA || '';
+    let Url = MULTIEMPRESA || "";
 
     if (!params.ip || !params.nombre || !params.cedula || !params.sucursal) {
       Alertas("tienes que leer el QR antes de enviar");
-      return;
+      return false;
     }
 
-    if (!params.firmaAuditoria || !params.firmaColocadora ) {
+    if (!params.firmaAuditoria || !params.firmaColocadora) {
       Alertas(" Debes firmar el arqueo antes de enviarlo");
-      return;
+      return false;
     }
 
     console.log("PostArqeuo", Url);
-    axios
-      .post(
+    console.log("🌐 URL completa:", Url);
+    console.log("🔑 Validando datos requeridos...");
+
+    try {
+      console.log("📤 Enviando petición POST a:", Url);
+      const res = await axios.post(
         Url,
         {
-          zona: params.perfil,
+          perfil: params.perfil,
           ip: params.ip,
           nombres: params.nombre,
           documento: params.cedula,
@@ -135,7 +139,7 @@ export default function PostArqeuo(params: any) {
           requisito34: params.requisito34,
           requisito35: params.requisito35,
           imagen_observacion: params.imageBase64,
-          nombre: params.Nombre_observacion,
+          nombre_observacion: params.Nombre_observacion,
           firma_auditoria: params.firmaAuditoria,
           firma_colocadora: params.firmaColocadora,
         },
@@ -143,32 +147,49 @@ export default function PostArqeuo(params: any) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Origin: "http://ganeyumbo.ddns.net",
           },
         }
-      )
-      .then((res) => {
-        console.log("res", res);
-        const data = res.data as { success?: string; error?: string };
-        if (res.status === 200 && data.success) {
-          Alertas(data.success); // ✅ Muestra el mensaje del backend
-          return true;
-        } else if (data.error) {
-          Alertas(data.error); // ⚠️ Muestra error detallado si viene del backend
-          return false;
-        } else {
-          Alertas("Error desconocido al ingresar el arqueo");
-          return false;
-        }
-      })
-      .catch((error) => {
-        const mensajeError =
-          error.response?.data?.error || error.message || "Error desconocido";
-        console.error("Error en la petición:", mensajeError);
-        Alertas(mensajeError); // ✅ Muestra el mensaje exacto que venga del backend
-      });
+      );
 
-    PostArqeuo(params);
+      console.log("✅ Respuesta recibida, status:", res.status);
+      console.log("📦 Datos de respuesta:", res.data);
+
+      let data = res.data;
+      if (typeof data === "string") {
+        try {
+          // Extract JSON part if mixed with HTML/text
+          const jsonMatch = data.match(/\{.*}/s);
+          if (jsonMatch) {
+            data = JSON.parse(jsonMatch[0]);
+          } else {
+            // Fallback: try parsing the whole string if no object found
+            data = JSON.parse(data);
+          }
+        } catch (e) {
+          console.log("Error parsing response data:", e);
+        }
+      }
+
+      const responseData = data as { success?: string; error?: string };
+
+      if (res.status === 200 && responseData.success) {
+        console.log("✅ ÉXITO:", responseData.success);
+        Alertas(responseData.success); // ✅ Muestra el mensaje del backend
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.log("💥 EXCEPCIÓN CAPTURADA");
+      console.log("Error completo:", error);
+      console.log("Error.response:", error.response);
+      console.log("Error.message:", error.message);
+
+      const mensajeError =
+        error.response?.data?.error || error.message || "Error desconocido";
+      console.log("📢 Mostrando alerta:", mensajeError);
+      Alertas(mensajeError); // ✅ Muestra el mensaje exacto que venga del backend
+      return false; // ← Retorna false en caso de excepción
+    }
   };
 
   return { enviarArqueo };

@@ -1,5 +1,5 @@
 {
-  "name": "ARQUEO MULTIEMPRESA",
+  "name": "arqueo-multiempresa",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "license": "MIT",
@@ -13,8 +13,7 @@
   },
   "overrides": {
     "rimraf": "^4.0.0",
-    "glob": "^9.0.0",
-    "inflight": false
+    "glob": "^9.0.0"
   },
   "expo": {
     "plugins": [
@@ -58,7 +57,9 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-picker/picker": "2.11.1",
     "@react-navigation/bottom-tabs": "^7.3.10",
+    "@react-navigation/drawer": "^7.5.7",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@shopify/react-native-skia": "2.0.0-next.4",
@@ -100,9 +101,8 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "react-native-web": "~0.20.0",
-    "expo-local-authentication": "~16.0.5",
-    "expo-secure-store": "~14.2.3"
+    "react-native-table-component": "^1.2.2",
+    "react-native-web": "~0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -110,6 +110,7 @@
     "@types/base-64": "^1.0.2",
     "@types/react": "~19.0.10",
     "@types/react-native": "^0.73.0",
+    "@types/react-native-table-component": "^1.2.8",
     "eslint": "^9.29.0",
     "eslint-config-expo": "^9.2.0",
     "typescript": "~5.8.3"

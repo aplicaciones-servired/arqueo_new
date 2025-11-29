@@ -17,12 +17,20 @@
       "permissions": [
         "android.permission.CAMERA"
       ],
-      "package": "com.aplicaciones.arqueo"
+      "package": "com.aplicaciones.arqueo",
+      "usesCleartextTraffic": true
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
+    },
+    "ios": {
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "plugins": [
       "expo-router",

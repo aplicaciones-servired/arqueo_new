@@ -43,12 +43,19 @@ export const useImagePicker = () => {
         }
     };
 
+    const resetImagePicker = () => {
+        setImage(null);
+        setImageBase64(null);
+        setNombre_observacion('');
+    };
+
     return {
         image,
         imageBase64, // base64 puro, sin prefijo
         pickImage,
         Nombre_observacion,
         setNombre_observacion,
-        setImage
+        setImage, 
+        resetImagePicker
     };
 };
