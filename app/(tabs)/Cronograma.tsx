@@ -138,6 +138,7 @@ export default function Cronograma() {
       const envioExitoso = await enviarCronograma();
       if (envioExitoso) {
         resetImagePicker(); // Limpia el selector de imágenes
+        fetchData(); // Recarga los datos automáticamente
       }
     } catch (error) {
       console.error("Error inesperado:", error);
