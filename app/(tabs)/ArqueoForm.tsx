@@ -191,9 +191,10 @@ export default function ArqueoForm() {
     resetRaspas,
   } = Raspas();
 
-  const { preguntas, togglePregunta } = usePreguntasChec({
-    requisito: setrequisito,
-  });
+  const { preguntas, togglePregunta, updateObservacion, resetObservacion } =
+    usePreguntasChec({
+      requisito: setrequisito,
+    });
   const requisitosObj = requisito ? JSON.parse(requisito) : {};
 
   const {
@@ -314,6 +315,7 @@ export default function ArqueoForm() {
       });
       setImage(null);
       setNombre_observacion("");
+      resetObservacion();
     }
   };
 
@@ -902,6 +904,16 @@ export default function ArqueoForm() {
                         {pregunta.estado}
                       </ThemedText>
                     </ThemedView>
+                    <ThemeInput
+                      onChangeText={(text: string) =>
+                        updateObservacion(pregunta.id, text)
+                      }
+                      value={pregunta.observacion}
+                      placeholder="Observación (opcional)"
+                      multiline={true}
+                      numberOfLines={2}
+                      style={styles.observacionInput}
+                    />
                   </ThemedView>
                 ))}
 
@@ -1146,5 +1158,10 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     backgroundColor: "white",
     marginVertical: 10,
+  },
+
+  observacionInput: {
+    height: 60, // tamaño fijo
+    textAlignVertical: "top", // el texto inicia arriba
   },
 });
