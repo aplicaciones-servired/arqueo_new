@@ -379,7 +379,7 @@ export default function ArqueoForm() {
         <ParallaxScrollView
           headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
         >
-          <ThemedText type="title">Arqueo multiempres</ThemedText>
+          <ThemedText type="title">Arqueo multiempresa</ThemedText>
           <ThemedView style={styles.titleContainer}>
             <Pressable
               onPress={() => setShowScanner(!showScanner)}
@@ -394,7 +394,7 @@ export default function ArqueoForm() {
             </Pressable>
 
             <Pressable
-              onPress={logout}
+              onPress={() => logout()}
               style={({ pressed }) => [
                 styles.Button,
                 {

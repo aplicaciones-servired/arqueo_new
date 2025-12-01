@@ -37,7 +37,7 @@ export default function LoginScreen() {
 
       <View style={styles.conten}>
         <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>
-          Arqueo multiempres
+          Arqueo multiempresa
         </Text>
         <Image
           source={require("../assets/images/logogane.webp")}
