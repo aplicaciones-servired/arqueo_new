@@ -5,7 +5,7 @@ interface Cono {
   empresa: string;
   nota: string;
   estado: string;
- 
+  observacion: string;
 }
 
 export type Conogramas = Cono[];

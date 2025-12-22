@@ -22,6 +22,7 @@ export default function PostCronograma(params: any) {
           estado: params.estado,
           imagen: params.imagen,
           perfil: params.perfil,
+          observacion: params.observacion,
         },
         {
           headers: {

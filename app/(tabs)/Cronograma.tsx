@@ -1,6 +1,7 @@
 import { useImagePicker } from "@/components/ImagePickerComponent";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { ThemeInput } from "@/components/ThemeInput";
 import { useAuth } from "@/context/AuthProvider";
 import PostCronograma from "@/hooks/PostCronograma";
 import { Cono } from "@/types/Cronograma";
@@ -24,7 +25,7 @@ import {
 import { Row, Table } from "react-native-table-component";
 import Alertas from "../../components/ui/Alertas";
 
-const ESTADOS = ["", "Realizado", "Cerrado"];
+const ESTADOS = ["", "Realizado", "Cerrado", "No Pudo Realizar"];
 
 export default function Cronograma() {
   const { image, pickImage, imageBase64, resetImagePicker } = useImagePicker();
@@ -36,6 +37,7 @@ export default function Cronograma() {
   const [modalVisible, setModalVisible] = useState(false);
   const [prueba, setPrueba] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [observacion, setObservacion] = useState("");
 
   // Redirect si no está logueado
   if (!isLoggedIn) {
@@ -91,35 +93,36 @@ export default function Cronograma() {
   }, [fetchData]);
 
   const fecha = new Date().toISOString().split("T")[0];
-  const tableHead = ["Día", "Punto de Venta", "Estado"];
+  const tableHead = ["Día", "Punto de Venta", "Estado", "Observación"];
 
   const renderButton = (item: Cono) => {
     const isDisabled =
-      item.estado?.trim() === "Cerrado" || item.estado?.trim() === "Realizado";
+      item.estado?.trim() === "Cerrado" ||
+      item.estado?.trim() === "Realizado" ||
+      item.estado?.trim() === "No Pudo Realizar";
 
     return (
       <TouchableOpacity
         onPress={() => {
           if (!isDisabled) {
-            // Solo se ejecuta si NO está deshabilitado
             setSelectedRecord(item);
             setPrueba(item.estado?.trim());
             setModalVisible(true);
           }
         }}
-        disabled={isDisabled} // Deshabilita el botón
+        disabled={isDisabled}
         style={[
           styles.actionButton,
-          isDisabled && { backgroundColor: "#ccc" }, // opcional: darle estilo de "bloqueado"
+          isDisabled && { backgroundColor: "#ccc" },
         ]}
       >
         <ThemedText style={styles.btnText}>
           {isDisabled ? "visitado" : "Ver"}
         </ThemedText>
-        s
       </TouchableOpacity>
     );
   };
+
 
   const modalBackgroundColors: Record<string, string> = {
     light: "#ffffff",
@@ -130,6 +133,7 @@ export default function Cronograma() {
     id: selectedRecord?.id,
     estado: prueba,
     imagen: imageBase64,
+    observacion: observacion,
     perfil,
   });
 
@@ -170,9 +174,9 @@ export default function Cronograma() {
                 <Row
                   key={index}
                   data={[
-                    item.dia,
-                    item.puntodeventa,
-                    item.estado,
+                    item.dia ?? '—',
+                    item.puntodeventa ?? '—',
+                    item.estado ?? 'No definido',
                     renderButton(item),
                   ]}
                   style={styles.row}
@@ -280,6 +284,20 @@ export default function Cronograma() {
                     </>
                   )}
 
+                  {prueba === "No Pudo Realizar" && (
+                    <>
+                      <ThemedText type="defaultSemiBold" style={{ marginTop: 10 }}>
+                        Por favor, proporcione una razón para no realizar la
+                        visita.
+                      </ThemedText>
+                      <ThemeInput
+                        value={observacion}
+                        onChangeText={(text) => setObservacion(text)}
+                        placeholder="Ingrese la razón aquí"
+                      />
+                    </>
+                  )}
+
                   <Pressable
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
@@ -295,7 +313,7 @@ export default function Cronograma() {
           </View>
         </Modal>
       </ThemedView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 
