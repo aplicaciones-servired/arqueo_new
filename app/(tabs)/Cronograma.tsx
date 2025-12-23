@@ -25,7 +25,7 @@ import {
 import { Row, Table } from "react-native-table-component";
 import Alertas from "../../components/ui/Alertas";
 
-const ESTADOS = ["", "Realizado", "Cerrado", "No Pudo Realizar"];
+const ESTADOS = ["", "Realizado", "Cerrado", "No Se Pudo Realizar"];
 
 export default function Cronograma() {
   const { image, pickImage, imageBase64, resetImagePicker } = useImagePicker();
@@ -99,7 +99,7 @@ export default function Cronograma() {
     const isDisabled =
       item.estado?.trim() === "Cerrado" ||
       item.estado?.trim() === "Realizado" ||
-      item.estado?.trim() === "No Pudo Realizar";
+      item.estado?.trim() === "No Se Pudo Realizar";
 
     return (
       <TouchableOpacity
@@ -284,7 +284,7 @@ export default function Cronograma() {
                     </>
                   )}
 
-                  {prueba === "No Pudo Realizar" && (
+                  {prueba === "No Se Pudo Realizar" && (
                     <>
                       <ThemedText type="defaultSemiBold" style={{ marginTop: 10 }}>
                         Por favor, proporcione una razón para no realizar la
@@ -294,6 +294,15 @@ export default function Cronograma() {
                         value={observacion}
                         onChangeText={(text) => setObservacion(text)}
                         placeholder="Ingrese la razón aquí"
+                        multiline
+                        numberOfLines={4}
+                        style={{
+                          height: 100,
+                          width: 300,
+                          textAlignVertical: "top",
+                          marginTop: 10,
+                          position: "relative",
+                        }}
                       />
                     </>
                   )}

@@ -1161,7 +1161,11 @@ const styles = StyleSheet.create({
   },
 
   observacionInput: {
-    height: 60, // tamaño fijo
-    textAlignVertical: "top", // el texto inicia arriba
+    height: 100, // tamaño fijo
+    width: 300,
+    textAlignVertical: "top",
+    marginTop: 10,
+    position: "relative",
   },
+
 });
