@@ -1,7 +1,7 @@
 import { Canvas, Path, Skia, useCanvasRef } from '@shopify/react-native-skia';
-import { Buffer } from 'buffer'; // Asegúrate de instalar 'buffer' si usas Expo: npm install buffer
-import React, { useCallback, useRef, useState } from 'react';
-import { Button, PanResponder, StyleSheet, View } from 'react-native';
+import { Buffer } from 'buffer';
+import React, { useCallback, useState } from 'react';
+import { Button, LayoutRectangle, PanResponder, StyleSheet, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 
 type SkiaPath = ReturnType<typeof Skia.Path.Make>;
@@ -16,16 +16,32 @@ export default function Firma({ setFirmaAuditoria, setFirmaColocadora }: FirmaPr
   const [auditoriaPaths, setAuditoriaPaths] = useState<SkiaPath[]>([]);
   const [colocadorPaths, setColocadorPaths] = useState<SkiaPath[]>([]);
 
+  // Referencias para las dimensiones de cada canvas
+  const [auditoriaLayout, setAuditoriaLayout] = useState<LayoutRectangle | null>(null);
+  const [colocadorLayout, setColocadorLayout] = useState<LayoutRectangle | null>(null);
+
   const canvasRefAuditoria = useCanvasRef();
   const canvasRefColocador = useCanvasRef();
 
-  const auditoriaPath = useRef<SkiaPath>(Skia.Path.Make());
-  const colocadorPath = useRef<SkiaPath>(Skia.Path.Make());
+  // Estados para controlar si estamos dibujando
+  const [isDrawingAuditoria, setIsDrawingAuditoria] = useState(false);
+  const [isDrawingColocador, setIsDrawingColocador] = useState(false);
 
-  const isDrawingAuditoria = useRef(false);
-  const isDrawingColocador = useRef(false);
+  // Función para verificar si el punto está dentro del canvas
+  const isPointInsideCanvas = useCallback(
+    (x: number, y: number, layout: LayoutRectangle | null) => {
+      if (!layout) return false;
+      return (
+        x >= 0 &&
+        x <= layout.width &&
+        y >= 0 &&
+        y <= layout.height
+      );
+    },
+    []
+  );
 
-  // Convierte el snapshot a base64 igual que en Android
+  // Convierte el snapshot a base64
   const captureAndConvert = useCallback(
     async (canvasRef: React.RefObject<any>, paths: SkiaPath[]) => {
       if (!canvasRef.current || paths.length === 0) return null;
@@ -33,19 +49,23 @@ export default function Firma({ setFirmaAuditoria, setFirmaColocadora }: FirmaPr
       const image = canvasRef.current.makeImageSnapshot();
       if (!image) return null;
 
-      // Comprimir a JPEG calidad 0.3 (igual que la imagen de galería)
-      const bytes = image.encodeToBytes(); // PNG por defecto
+      const bytes = image.encodeToBytes();
       const base64 = Buffer.from(bytes).toString('base64');
       return base64;
     },
     []
   );
 
-  // Solo convertir cuando se termina de dibujar
+  // Guardar firmas
   const handleSaveSignatures = useCallback(
     async (auditoriaPathsArg: SkiaPath[], colocadorPathsArg: SkiaPath[]) => {
-      const firmaAud = await captureAndConvert(canvasRefAuditoria, auditoriaPathsArg);
-      const firmaCol = await captureAndConvert(canvasRefColocador, colocadorPathsArg);
+      const firmaAud = auditoriaPathsArg.length > 0
+        ? await captureAndConvert(canvasRefAuditoria, auditoriaPathsArg)
+        : '';
+
+      const firmaCol = colocadorPathsArg.length > 0
+        ? await captureAndConvert(canvasRefColocador, colocadorPathsArg)
+        : '';
 
       setFirmaAuditoria(firmaAud ?? '');
       setFirmaColocadora(firmaCol ?? '');
@@ -53,66 +73,136 @@ export default function Firma({ setFirmaAuditoria, setFirmaColocadora }: FirmaPr
     [captureAndConvert, setFirmaAuditoria, setFirmaColocadora, canvasRefAuditoria, canvasRefColocador]
   );
 
-  // Manejadores optimizados con useCallback
+  // Manejador para cuando se sale del área
+  const handleStopDrawing = useCallback(
+    (isAuditoria: boolean) => {
+      if (isAuditoria) {
+        setIsDrawingAuditoria(false);
+      } else {
+        setIsDrawingColocador(false);
+      }
+      
+      // Guardar después de un breve delay
+      setTimeout(() => {
+        handleSaveSignatures(auditoriaPaths, colocadorPaths);
+      }, 50);
+    },
+    [auditoriaPaths, colocadorPaths, handleSaveSignatures]
+  );
+
+  // PanResponder para Auditoria
   const panResponderAuditoria = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: (e) => {
-      isDrawingAuditoria.current = true;
-      const newPath = Skia.Path.Make();
-      newPath.moveTo(e.nativeEvent.locationX, e.nativeEvent.locationY);
-      auditoriaPath.current = newPath;
-      setAuditoriaPaths((prev) => {
-        const updated = [...prev, newPath];
-        return updated;
-      });
+      const x = e.nativeEvent.locationX;
+      const y = e.nativeEvent.locationY;
+      
+      // Verificar que el punto inicial esté dentro del canvas
+      if (isPointInsideCanvas(x, y, auditoriaLayout)) {
+        setIsDrawingAuditoria(true);
+        const newPath = Skia.Path.Make();
+        newPath.moveTo(x, y);
+        setAuditoriaPaths(prev => [...prev, newPath]);
+      }
     },
     onPanResponderMove: (e) => {
-      if (!isDrawingAuditoria.current) return;
-      auditoriaPath.current.lineTo(e.nativeEvent.locationX, e.nativeEvent.locationY);
-      setAuditoriaPaths((prev) => {
-        const updated = [...prev.slice(0, -1), auditoriaPath.current.copy()];
-        return updated;
+      if (!isDrawingAuditoria) return;
+      
+      const x = e.nativeEvent.locationX;
+      const y = e.nativeEvent.locationY;
+      
+      // Si el punto está fuera del canvas, detener el dibujo
+      if (!isPointInsideCanvas(x, y, auditoriaLayout)) {
+        handleStopDrawing(true);
+        return;
+      }
+      
+      // Actualizar el último path
+      setAuditoriaPaths(prev => {
+        if (prev.length === 0) return prev;
+        
+        const lastPath = prev[prev.length - 1];
+        const updatedPath = lastPath.copy();
+        updatedPath.lineTo(x, y);
+        
+        const newPaths = [...prev];
+        newPaths[newPaths.length - 1] = updatedPath;
+        return newPaths;
       });
     },
-    onPanResponderRelease: async () => {
-      isDrawingAuditoria.current = false;
-      await handleSaveSignatures(auditoriaPaths, colocadorPaths);
+    onPanResponderRelease: () => {
+      if (isDrawingAuditoria) {
+        handleStopDrawing(true);
+      }
     },
+    // Este método se llama cuando el dedo sale del área del responder
+    onPanResponderTerminate: () => {
+      if (isDrawingAuditoria) {
+        handleStopDrawing(true);
+      }
+    },
+    // Este método se llama cuando otro responder toma el control
+    onPanResponderTerminationRequest: () => true,
   });
 
+  // PanResponder para Colocador
   const panResponderColocador = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: (e) => {
-      isDrawingColocador.current = true;
-      const newPath = Skia.Path.Make();
-      newPath.moveTo(e.nativeEvent.locationX, e.nativeEvent.locationY);
-      colocadorPath.current = newPath;
-      setColocadorPaths((prev) => {
-        const updated = [...prev, newPath];
-        return updated;
-      });
+      const x = e.nativeEvent.locationX;
+      const y = e.nativeEvent.locationY;
+      
+      if (isPointInsideCanvas(x, y, colocadorLayout)) {
+        setIsDrawingColocador(true);
+        const newPath = Skia.Path.Make();
+        newPath.moveTo(x, y);
+        setColocadorPaths(prev => [...prev, newPath]);
+      }
     },
     onPanResponderMove: (e) => {
-      if (!isDrawingColocador.current) return;
-      colocadorPath.current.lineTo(e.nativeEvent.locationX, e.nativeEvent.locationY);
-      setColocadorPaths((prev) => {
-        const updated = [...prev.slice(0, -1), colocadorPath.current.copy()];
-        return updated;
+      if (!isDrawingColocador) return;
+      
+      const x = e.nativeEvent.locationX;
+      const y = e.nativeEvent.locationY;
+      
+      if (!isPointInsideCanvas(x, y, colocadorLayout)) {
+        handleStopDrawing(false);
+        return;
+      }
+      
+      setColocadorPaths(prev => {
+        if (prev.length === 0) return prev;
+        
+        const lastPath = prev[prev.length - 1];
+        const updatedPath = lastPath.copy();
+        updatedPath.lineTo(x, y);
+        
+        const newPaths = [...prev];
+        newPaths[newPaths.length - 1] = updatedPath;
+        return newPaths;
       });
     },
-    onPanResponderRelease: async () => {
-      isDrawingColocador.current = false;
-      await handleSaveSignatures(auditoriaPaths, colocadorPaths);
+    onPanResponderRelease: () => {
+      if (isDrawingColocador) {
+        handleStopDrawing(false);
+      }
     },
+    onPanResponderTerminate: () => {
+      if (isDrawingColocador) {
+        handleStopDrawing(false);
+      }
+    },
+    onPanResponderTerminationRequest: () => true,
   });
 
+  // Limpiar firmas
   const clearAll = useCallback(() => {
     setAuditoriaPaths([]);
     setColocadorPaths([]);
+    setIsDrawingAuditoria(false);
+    setIsDrawingColocador(false);
     setFirmaAuditoria('');
     setFirmaColocadora('');
-    auditoriaPath.current = Skia.Path.Make();
-    colocadorPath.current = Skia.Path.Make();
   }, [setFirmaAuditoria, setFirmaColocadora]);
 
   return (
@@ -120,7 +210,11 @@ export default function Firma({ setFirmaAuditoria, setFirmaColocadora }: FirmaPr
       <ThemedText type="subtitle">Firma Arqueo</ThemedText>
 
       <ThemedText type="subtitle">Firma Auditoria</ThemedText>
-      <View style={styles.canvas} {...panResponderAuditoria.panHandlers}>
+      <View 
+        style={styles.canvas}
+        onLayout={(event) => setAuditoriaLayout(event.nativeEvent.layout)}
+        {...panResponderAuditoria.panHandlers}
+      >
         <Canvas ref={canvasRefAuditoria} style={{ flex: 1 }}>
           {auditoriaPaths.map((path, index) => (
             <Path
@@ -137,7 +231,11 @@ export default function Firma({ setFirmaAuditoria, setFirmaColocadora }: FirmaPr
       </View>
 
       <ThemedText type="subtitle">Firma Colocador</ThemedText>
-      <View style={styles.canvas} {...panResponderColocador.panHandlers}>
+      <View 
+        style={styles.canvas}
+        onLayout={(event) => setColocadorLayout(event.nativeEvent.layout)}
+        {...panResponderColocador.panHandlers}
+      >
         <Canvas ref={canvasRefColocador} style={{ flex: 1 }}>
           {colocadorPaths.map((path, index) => (
             <Path
@@ -167,11 +265,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   canvas: {
-    height: 200,
+    height: 250,
     width: 400,
     borderWidth: 1,
     borderColor: '#000',
     backgroundColor: 'white',
     marginVertical: 10,
+    overflow: 'hidden', // Importante para contener el contenido
   },
 });

@@ -20,10 +20,6 @@ export default function PostArqeuo(params: any) {
       return false;
     }
 
-    console.log("PostArqeuo", Url);
-    console.log("🌐 URL completa:", Url);
-    console.log("🔑 Validando datos requeridos...");
-
     try {
       console.log("📤 Enviando petición POST a:", Url);
       const res = await axios.post(
@@ -208,20 +204,13 @@ export default function PostArqeuo(params: any) {
       const responseData = data as { success?: string; error?: string };
 
       if (res.status === 200 && responseData.success) {
-        console.log("✅ ÉXITO:", responseData.success);
         Alertas(responseData.success); // ✅ Muestra el mensaje del backend
         return true;
       }
       return false;
     } catch (error: any) {
-      console.log("💥 EXCEPCIÓN CAPTURADA");
-      console.log("Error completo:", error);
-      console.log("Error.response:", error.response);
-      console.log("Error.message:", error.message);
-
       const mensajeError =
         error.response?.data?.error || error.message || "Error desconocido";
-      console.log("📢 Mostrando alerta:", mensajeError);
       Alertas(mensajeError); // ✅ Muestra el mensaje exacto que venga del backend
       return false; // ← Retorna false en caso de excepción
     }
