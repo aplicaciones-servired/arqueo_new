@@ -33,7 +33,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
 
       <View style={styles.conten}>
         <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>

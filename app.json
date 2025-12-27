@@ -15,7 +15,7 @@
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "android.permission.CAMERA"
+        "CAMERA"
       ],
       "package": "com.aplicaciones.arqueo",
       "usesCleartextTraffic": true
@@ -34,6 +34,14 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir que la app use la cámara para escanear códigos QR",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
       [
         "expo-splash-screen",
         {

@@ -17,7 +17,6 @@ export default function UseLogin({
   Contraseña: string;
   onLog?: (msg: string) => void;
 }) {
-
   const apiUrl = process.env.EXPO_PUBLIC_LOGIN;
 
   const [loading, setLoading] = useState(false);
@@ -55,14 +54,17 @@ export default function UseLogin({
       );
 
       const perfilRaw = res.data?.perfil?.trim()?.toUpperCase();
+      const Usuarios = Usuario;
+
       onLog && onLog("Respuesta del login: " + JSON.stringify(res.data));
 
       if (
         res.status === 200 &&
         (perfilRaw === "AUDITORIA-MULTIRED" ||
-          perfilRaw === "AUDITORIA-SERVIRED"  || perfilRaw === "APLICACIONES")
+          perfilRaw === "AUDITORIA-SERVIRED" ||
+          perfilRaw === "APLICACIONES")
       ) {
-        await login(perfilRaw);
+        await login(perfilRaw, Usuarios);
         onLog && onLog("Login exitoso, perfil: " + perfilRaw);
       } else {
         setError("Perfil no autorizado");

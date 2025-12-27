@@ -10,9 +10,9 @@ import { ThemeInput } from "@/components/ThemeInput";
 import Alertas from "@/components/ui/Alertas";
 import { useAuth } from "@/context/AuthProvider";
 import PostArqeuo from "@/hooks/PostArqeuo";
-import { Camera, CameraView } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { Redirect } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Image,
   Pressable,
@@ -27,17 +27,21 @@ import { Caja_Rollos } from "../../components/Caja_Rollos";
 import { Entrega_salida } from "../../components/Entrega_Salidaefectivo";
 import { Raspas } from "../../components/Raspas";
 
+
 export default function ArqueoForm() {
   const { perfil } = useAuth();
   console.log("pdf", perfil);
+  const { supervisor } = useAuth();
+  console.log("Supervisor:", supervisor);
 
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+
+  const [permission, requestPermission] = useCameraPermissions();
   const [showScanner, setShowScanner] = useState(false);
   const [Punto_venta, setPunto_venta] = useState("");
   const [Categorizacion, setCategorizacion] = useState("");
   const [firmaAuditoria, setFirmaAuditoria] = useState<string>("");
   const [firmaColocadora, setFirmaColocadora] = useState<string>("");
-  const [Supervisor, setSupervisor] = useState<any>(null);
+  const [Supervisor, setSupervisor] = useState<string | undefined>(supervisor || "");
   const [requisito, setrequisito] = useState<string>("");
   const [latitude, setlatitude] = useState<number | undefined>(undefined);
   const [longitude, setlongitude] = useState<number | undefined>(undefined);
@@ -305,7 +309,6 @@ export default function ArqueoForm() {
       setCategorizacion("");
       setFirmaAuditoria("");
       setFirmaColocadora("");
-      setSupervisor(null);
       setrequisito("");
       setFormData({
         ip: "",
@@ -319,53 +322,47 @@ export default function ArqueoForm() {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
   if (!isLoggedIn) {
     console.log("Usuario no autenticado - Redirigiendo a login");
     return <Redirect href="/" />;
   }
 
-  const handleBarCodeScanned = ({ data }: { data: string }) => {
+  const handleBarCodeScanned = ({ data }: { data?: string }) => {
+    if (!data || typeof data !== "string") return;
+
     const parts = data.split("&");
-    if (parts.length === 4) {
-      setFormData({
-        ip: parts[0],
-        nombre: parts[1],
-        cedula: parts[2],
-        sucursal: parts[3],
-      });
+
+    if (parts.length !== 4) {
+      Alertas("QR inválido");
+      return;
     }
+
+    setFormData({
+      ip: parts[0],
+      nombre: parts[1],
+      cedula: parts[2],
+      sucursal: parts[3],
+    });
+
     setShowScanner(false);
   };
 
-  if (hasPermission === null) {
+
+  if (!permission) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Solicitando permiso para la cámara...</Text>
+        <Text>Cargando permisos de cámara...</Text>
       </View>
     );
   }
 
-  if (hasPermission === false) {
+  if (!permission.granted) {
     return (
       <ThemedView style={styles.loadingContainer}>
         <ThemedText>Se necesita permiso para acceder a la cámara</ThemedText>
         <Pressable
           style={styles.permissionButton}
-          onPress={async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            if (status !== "granted") {
-              Alertas("Se necesitan permisos para la camara");
-              return;
-            }
-            setHasPermission(status === "granted");
-          }}
+          onPress={requestPermission}
         >
           <ThemedText>Conceder permiso</ThemedText>
         </Pressable>
@@ -413,7 +410,7 @@ export default function ArqueoForm() {
               <CameraView
                 style={styles.camera}
                 facing="back"
-                onBarcodeScanned={handleBarCodeScanned}
+                onBarcodeScanned={showScanner ? handleBarCodeScanned : undefined}
                 barcodeScannerSettings={{
                   barcodeTypes: ["qr"],
                 }}

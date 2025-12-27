@@ -8,9 +8,11 @@ interface AuthContextType {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   perfil: string | null;
   setPerfil: Dispatch<SetStateAction<string | null>>;
-  login: (perfil: string) => Promise<void>;
+  login: (perfil: string, Usuarios: string) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
+  supervisor: string | null;
+  setSupervisor: Dispatch<SetStateAction<string | null>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -21,11 +23,14 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => { },
   logout: async () => { },
   loading: true,
+  supervisor: null,
+  setSupervisor: () => { },
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [perfil, setPerfil] = useState<string | null>(null);
+  const [supervisor, setSupervisor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -66,11 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   // ...existing code...
-  const login = async (perfil: string) => {
+  const login = async (perfil: string, Usuarios: string) => {
     try {
       await AsyncStorage.setItem('userPerfil', perfil);
       await AsyncStorage.setItem('isLoggedIn', 'true');
       setPerfil(perfil);
+      setSupervisor(Usuarios || null);
       setIsLoggedIn(true);
       console.log("Login exitoso, perfil:", perfil); // <-- Agrega este log
       router.replace("/(tabs)/ArqueoForm");
@@ -101,6 +107,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       perfil,
       setPerfil,
       login,
+      supervisor,
+      setSupervisor,
       logout,
       loading
     }}>
